@@ -1,0 +1,57 @@
+= Web tools 2017 (Google chrome)
+Objectif: debugger une appli PWA qui reçoit des dessins pixelarts en Lego.
+
+Stack: ES6 (babel/browserify), SASS, gulp
+
+Activer les "DevTools experiments" dans chrome://flags
+
+== Responsive
+* choisir la résolution
+* voir les "media query"
+  * on voit les différentes tailles gérées par media query et le code css associé
+* on a des gabari pour les mobiles les plus populaires
+* pour chaque gabari, on a des options pour afficher :
+  * avec la barre d'adresse,
+  * en mode paysage
+  * ...
+
+== Workspaces
+Lier un répertoire du disque avec les devtools
+* pour fixer des trucs dans le code directement depuis chrome
+* Option "Persistence 2.0":
+  * On drag&drop le dossier des sources sur les mappings dans l'onglet "Sources",
+    il fait le lien entre le code et les fichiers sources
+* Quick Source : lie les styles dans chrome avec les fichiers sources css, less, sass, ...
+* CSS box-shadow editor :)
+
+Note: raccourci Ctrl+Shift+P
+
+== Onglet erformances
+
+== Port forwarding
+Onglet "Remote devices", port forwarding :
+* on redirige localhost:3000 du téléphone vers l'onglet courant
+* on voit directement le résultat de la navigation du téléphone dans chrome
+
+== Progressive WebApps
+* Site responsive,
+* Offline (ServiceWorker)
+* Installable (sur l'écran d'accueil - AppManifest json)
+* dans l'onglet "Application" des dev tools
+  * > Manifest
+      > Offline mode
+      > Update on reload: force le resync le serviceworker avec les données fraîches
+      > Options standalone pour ne pas avoir la barre d'url
+
+== Snippets
+
+Note: js "console.table"
+
+Dev tools Settings > Experiments > Shift x6 Easter Egg !!!
+
+Debug des lambdas
+* Fonctionne que sur ES6 pure, pas en transpilation
+
+== Debug node.js (server-side)
+$ node --listen
+Chrome trouve tout seul le port debug de node et peut le debugguer :)

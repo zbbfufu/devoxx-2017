@@ -1,0 +1,54 @@
+= Java 9 G1 GC
+
+* Développé par Oracle et ActiveViam
+* Objectif 10TB de heap
+
+== Uses cases des grosses VM
+* Traiter les batch mensuel en temps réel
+** Finance: calcul du risque de crédit
+** Pricing: calcul du prix optimal des produits
+** Logistique: trajets des camions en fonction de la météo
+
+== Meilleur langage pour traiter ces problématiques
+* performance: c/c++
+* productivité
+
+Bon compromis : Java
+
+Problème: scalabilité du garbage collector
+Solution: applicative & jvm
+
+== Axe d'amélioration
+* Off-Heap memory management
+* Parallel programming
+** Fork/join
+** data partition
+
+* Numa (Non-Uniform Memory Architecture) processor architecture
+** lier thread/données/processeur-core
+
+== G1
+* G1 = Garbage First : s'occupe d'abord des objets morts
+
+* Divise la heap en région
+** les régions sont traités en parallèle
+** chaque région peut avoir son propre algorithme
+
+1. Young generation, splité en régions.
+   G1 déplace les objets vivants d'une région à l'autre
+   Pas assez rapide pour les grosses heap
+
+2. Young generation / Survivor regions
+   Object non garbagés
+
+3. Old Generation / Old regions
+   Pour les objets qui ont survécu à plusieurs GC en Young
+
+4. Phase de marquage des régions trop sales
+
+5.
+
+
+
+
+PUTAIN QU'IL EST CHIANT CE SPEAKER !!!!!

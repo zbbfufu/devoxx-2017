@@ -1,0 +1,47 @@
+= Devoxx France 2017
+
+
+
+== Ce que j'ai aimé
+
+
+== Ce que j'ai moins aimé
+=== Javaslang:
+C'est une bibliothèque qui veut rendre l'écriture du code Java utilisant
+les API du JDK (Collection, Stream, Future) beaucoup plus _fluent_ en fournissant
+une API très similaire mais avec quelques méthodes supplémentaires bien placées.
+
+Entre autres :
+
+* Une `CheckedFunction` permettant d'écrire des lambdas qui propagent une exception
+* Des `Tuple` avec 0 à 8 valeurs possibles
+* Une super-interface `Value` qui est `Iterable` & `Serializable`
+* Du Pattern Matching
+* Des fonctions `.map()` sur toutes les collections pour éviter le `.stream()`
+* Des fabriques de Collections `List.of( 1, 2, 3, 4, 5 )`
+
+C'est très _sexy_ présenté ainsi, mais je pense que c'est dangereux à moyen terme :
+on touche ici au code _core_ de nos applications, et il sera très coûteux de réécrire
+le code avec les API standard s'il nécéssaire de se débarasser de *Javaslang*
+
+== Ce que je vais faire à mon retour au bureau
+=== Spring 5
+Je travaille sur un projet Spring 4.2. Après un an de développement et une première
+mise en production, c'est le moment de prendre le temps de résorber la dette technique.
+
+Spring 5 devrait sortir en juin de cette année et apporte son lot d'améliorations :
+
+* L'utilisation de Java 8 (API Date & Time, Optional)
+* De meilleurs performances au démarrage
+* Quelques méta-annotations sympathiques (`@GetMapping` au lieu de `@GET @RequestMapping`)
+* Des améliorations pour les tests (dont le support de JUnit 5)
+* Reactive Spring
+* Le support de Kotlin
+
+En particulier nos tests ont besoin d'un bon coup de balai !
+
+=== Les nouveautés Docker 2017
+
+
+== Ce que j'ai découvert
+=== CQRS / Event Sourcing

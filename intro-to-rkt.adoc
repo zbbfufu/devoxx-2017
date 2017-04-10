@@ -1,0 +1,76 @@
+= Introduction à RKT
+
+Yoann Rousseau @y0anR
+
+Disclaimer: je ne torpille pas Docker :)
+
+== Historique
+* Prononcé "rock-it"
+* RKT vient de CoreOS
+* CoreOS a abandonné fleet pour Kubernetes en 02/2017
+
+== Fonctionnement
+* pour faire tourner des containers
+* en ligne de commande, tuer le process tue le container
+* en golang
+* open-source
+
+== Commandes
+* rkt list: liste les containers
+* rkt image list
+Q: "sha512-123456" / "sha256-123456" ?
+
+* rkt fetch
+* rkt run http://blabla/image.aci
+
+* en root : srkt => sudo rkt
+
+* Pour sortir, "Ctrl+AltGr+]" 2 fois
+
+* Sécurité
+** Les images sont signées
+** rkt/srkt : srkt pour les actions root (run) / rkt pour le non-root (fetch, list, ...)
+
+== Composition
+* Différents outils pour différents usages, pas un monolithe comme Docker
+* On peut facilement interchanger les outils
+
+== AppC
+* Spec for application containers
+github/appc/spec
+github/appc
+
+* ACI - Application Container Image
+** format targz avec /rootfs + /manifest (json)
+*** lien symbolique possible dans les images
+
+$ actool build ./ /tmp/myapp-aci
+* targz manifest & rootfs
+
+* docker2aci
+* rkt peut aussi transformer une image docker en ACI
+
+Q: Différence image docker vs aci ?
+** Pas d'héritage d'image, plutôt une dépendance
+
+Q: Run ACI on docker ?
+
+$ actool -debug validate xxx.aci
+$ srkt --insecure-options=image run --port=80-tcp:8080 xxx.aci
+
+== RKT
+* Même notion de "pod" que dans Kubernetes
+* Stages :
+** RKT = stage 0
+*** Pod = stage 1: prépare l'environnement d'exécution des applis
+**** App = stage 2: démarrage de l'application
+**** App = stage 2
+
+Q: Si je n'ai pas systemd dans mon container ?
+
+* rkt se manage avec les outils classiques systemd (systemctl, machinectl - gestionnaire de VM et containers)
+
+== Conclusion
+* AppC va être décommissionné
+* RKT va migrer de AppC vers OCI
+* CNCF a reçu et accepté containerd et rkt

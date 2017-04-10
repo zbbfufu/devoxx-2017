@@ -1,0 +1,46 @@
+= La voiture autonome
+
+Didier Girard
+
+
+"Le développeur de demain assemblera des observations non certaines provenant de machine learning".
+
+== Théorème de Blayes
+
+Machine Learning
+* Théorie:
+** Data
+** Model
+** Prédicition
+* Réalité
+** Data
+** n Model, diverses probabilités
+** Prédiction fiable à 50%
+
+Exemple homme/femme
+
+1. Photo femme => 83% femme
+2. + toilettes hommes => 1% femme
+3. + toilettes femmes fermées => 75% femme
+
+* Le développeur du futur devra assembler les résultats de divers modèles. Il faudrait un DSL pour faire ça.
+* C'est de la programmation probabilistique
+
+* Exemple: reconnaître des Segway
+** Approche deep learning: apprendre à partir de milliards de photos
+** Approche programmation probabilistique : découper un Segway en plusieurs éléments
+
+* Exemple: merge de deux bases produits formalisées différement
+
+* Il faut créer des programmes fiables et testables à partir de données non certaines
+
+
+
+
+
+
+
+
+
+
+Fin

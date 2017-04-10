@@ -1,0 +1,129 @@
+= Pattern matching en Java 10 ?
+
+Forax développe un remplaçant de maven: "Pro" lol :)
+
+== Problèmes avec les objets
+* header de 64b pour chaque objet (type, hashcode, serializable, gc info)
+* tableau d'objet = tableau de référence
+** entraine des cache misses au niveau du processeur
+* trop d'objets alloués qui restent en heap
+
+== Value type - Project Vahlala
+* comme les struct en C
+* pas d'identité objet, plutôt comme un type primitif
+```
+  value class complex {
+    private final double re;
+    private final double im;
+  }
+```
+* immutables
+** pour éviter les alias sur la pile ???
+
+== Integration avec le reste du langage
+* tableau ou liste de value-types
+** stockage direct en mémoire, éviter le tableau de référence
+** ArrayList< value-type > ==> implémentation spécifique
+
+* implique de spécialiser le code "générics" au runtime
+** erasure
+** le bytecode n'est pas prévu pour ça
+
+
+== Project Panama
+1. Faire générer les stubs JNI par le JIT
+2. API pour accéder aux instructions spécifiques de certains processeurs
+** besoin de définir de nouveaux types primitifs
+*** comme les value-types, mais limité à ceux pré-définis dans le JDK
+
+
+== Java 10
+* Panama
+* value-types dans la JVM, mais pas dans le langage
+** possible dans d'autres langages de la jvm
+
+== Java 11
+* Full value-types
+* Specialized generics
+
+
+"Great book of Amber", Roger Zelany
+
+== Projet Amber
+* Inférence de type des variables locales
+* Non supporter pour les lambas (en tant qu'Objet fonction)
+
+* Enum paramétrées
+** Une valeur dune enum peuvent prendre un type différent
+** contraint par les generics
+
+* "leftover" des lambdas
+** paramètre par défaut des lambdas
+
+* Une lambda ouvre un nouveau scope (block)
+** pour réutiliser le nom des variables autour de la lambda
+
+
+== Pattern matching
+* demandé depuis 1997 (aka switch sur les types)
+* problème: multiples instanceof & cast
+* exemple:
+```
+   Object myObj
+   return switch ( myObj ){
+      case Type1 myVar1 -> myVar1.methodType1;
+      case Type2 myVar2 -> myVar2.methodType2;
+      default: ...
+   }
+```
+* myVarX est automatiquement au bon type
+* problème: je compilateur ne peux assurer qu'il n'y aura pas d'autres types
+** concept de hierarchie fermée: pas d'autres implémentations
+
+* "data" types
+`data Point(int x, int y)`
+** c'est pas une classe mais un conteneur de données
+** avec equals/hashcode/tostring/getters
+** utile pour les value-types
+
+* Pattern matching destructuré
+```
+  switch()
+    case Add( Value(v1), Value(v2) ) -> ...
+    case Add( e1, e2) -> ...
+```
+* underscore for unused variables : `Add( _, v2)`
+
+* même syntaxe que les lambdas ` -> `, car variables final dans les cases du matching
+
+* Problème: plus d'encapsulation api/implem
+
+* Switch/case pattern matching = sucre pour un `if(instanceof) then (cast)`
+
+* Déconstructeur
+```
+  public Expr, Expr deconstructor() {
+    return val1, val2
+  }
+```
+** pour extraire les donnéees d'une classe
+
+== Problèmes
+* if instanceof else : pas performant
+
+
+* Pour les switch, on peut utiliser invokedynamics
+** générer les `if/else` au runtime, au moment où on reçoit un nouveau type de valeur
+** les brancher avec invokedynamics
+** le code s'adapte à la structure passée dans le switch
+** code généré avec le type réel, pas avec les interfaces
+*** `getClass == xx` au lieu de `instanceof`, plus performant
+** Eventuellement mettre les cases dans une map
+*** "After N guards, use java.lang.ValueClass" ??
+
+
+* déconstructeur / `unapply` de Scala alloue 2 objects (Optional<Tuple<K,V>)
+
+
+== Conclusion
+Java 10 : Panama, Valhalla mais en interne VM, Pattern Matching

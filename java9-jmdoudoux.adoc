@@ -1,0 +1,152 @@
+
+== Nouveautés Java 9
+Jigsaw, mais pas que, language, jvm, jdk.
+JSR 379 + 376 (Jigsaw)
+
+== Changement dans le language
+* Le tiret bas '_' est maintenant mot-clé du language, plus un identifier valide
+** Sera peut-être utilisé dans les lambdas en Java 8
+
+* try with resources plus souple
+* operateur <> dans les classes anonymes, seulement si le compilateur peut deviner le type
+
+* @SafeVarargs utilisable sur les méthodes privées
+
+* Méthodes privées implémentées (not default, not abstract) dans les interfaces
+
+== Nouvelles API
+
+* JEP 259 : StackWalking API : analyse des stacktraces
+** StackWalker.StackFrame
+** StackWalker.walk( mapping-function )
+
+* JEP 272 : Desktop
+** java.awt.Desktop, accès à la barre des tâches, évènements, ...
+
+* JEP 266 : Reactive Stream
+** Interfaces pour les "Reactive Stream", différents des java.util.Stream
+** Mécanismes Pub/Sub
+** Env. Iterator+Observer
+** Flow.Subscriber<T>
+*** onNext(T)
+*** onComplete()
+*** onThrowable()
+*** onSubscriber()
+** FLow.Processor<T,R>
+*** S'utilise entre un producer et un cnosommateur
+** Mécanisme de "back-pressure", consomme moins de ressouces
+
+== Evolution des API
+* JEP 102 : API Process
+** Pour exécuter une commande externe
+** interface ProcessHandle
+*** pour avoir des infos sur le process jvm courant
+*** pour avoir des infos sur les process externes
+*** ajouter un hook de fin de process ( ProcessHandler.onExit ou Process.onExit )
+** Attention aux restrictions OS (root required, ...)
+
+* JEP 269 : Collection Factories
+** Pour builder des collections immutables
+** List.of, Set.of, Map.of
+** Set.of("a","b","c")
+** Pas le choix de l'implémentation
+** Serializable
+** Pas de null pour List ou Set, pas de null pour les clés de Map
+
+Optional.stream()
+Optional.or( supplier )
+Optional.ifPresentOrElse( )
+
+Stream.takeWhile( ) -> itère jusqu'à
+Stream.dropWhile( ) -> drop jusqu'à
+Attention, streams ordonnés
+
+Stream.ofNullable() equivalent à Stream.empty() if null, else Stream.of
+
+Stream.iterate( predicate )
+
+* JEP 285
+** Thread.onSpinWait()
+** Méthode vide par défaut, @HotSpotIntrinsicCandidate
+** Pour éventuellement réduire la consommation CPU dans les boucles d'attente des threads,
+** Fonctionnera selon la jvm et le processeur
+
+== Mise à jour des outils du JDK
+* Nouvelle structure de répertoires du JDK.
+** L'existant avait un dossier jre avec des duplications de commandes
+** JDK et JRE sont mergées, bien que toujours installable séparément
+** Mécanisme lib/endorsed supprimé pour surcharger une API standard
+** Mécanisme lib/ext supprimé
+
+* Harmonisation des options de lignes de commande (plus proche de la syntaxe GNU - options courtes / longues )
+** --module-path xxx --module-path=xxx
+** -ae (-a -e)
+** attention rétrocompatibilité peut entrainer des conflits
+
+* Suppression de -source -target à venir
+** Support de N, N-1, N-2, N-3 ( dont 6-9 pour Java 9)
+** Warning avec le 6
+
+* --release 8 == -source 8 -target 8
+
+* JEP 238 : Multi-release jar
+** jar avec bytecode pour plusieurs versions de Java
+** Version principale à la racine, autres versions META-INF/versions/6
+** MANIFEST.MF
+*** + "Multi-Release: true"
+
+* JEP 222 : JShell !!!!! :D
+** Project Kulla
+
+* Suppression d'outils
+** jhat
+** JavaDB (Apache Derby) --> téléchargeable à part
+
+== Amélioration de la jvm
+
+* JEP 248 : format de la version java
+** Actuellement 2 types :
+*** Limited Update Release ( multiples de 20 )
+*** Critical Patch Updates (multiples de 5 [+ 1 pour être impair ])
+** Type SemVer : $MAJOR $MINOR $SECURITY $PATH
+** Nouvelle API pour avoir la version
+
+* GC "G1" par défault
+** Pour les grosses heaps
+** découpe chaque génération en estpaces de même type
+
+* Compact String
+** Java 8 : char[] de 16b
+** Java 9 : byte[] avec 1 octet de type UTF16 ou Latin1
+
+* JEP 280 : génération de bytecode
+** utilise invoke dynamic à la place de invokevirtual
+
+== Divers
+
+* JEP 224 & 225 : Javadoc HTML 5
+** recherche (js coté client)
+** vue package ou module (java9)
+
+* JEP 229
+** Keystores PKCS12 par défaut au lieu de JKS
+** Implémentation de SHA-3
+
+* JEP 226
+** Fichiers properties en UTF-8 par défault, fallback to ISO-8859-1 comme en Java 8
+
+* JEP 277
+** @Deprecated( +forRemoval=true, +since=<version>)
+** jdeprscan : scanner les deprecated utilisés
+
+* JEP 11
+** Incubators modules dans jdk.incubator, renommés plus tard
+
+* JEP 289 : Applets Deprecated
+
+* remove jvmti hprof agent
+* Money & Currency reporté :(
+
+== Conclusion
+
+* Release le 27 Juillet 2017 !!!

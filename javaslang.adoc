@@ -1,0 +1,19 @@
+= JavaSlang
+
+* CheckedFunction pour les exceptions dans les lambdas
+* Tuples 0-8
+* interface Value, iterable & serializable
+* futures et promesses
+* pattern matching
+* nouvelle api collection immutables inspirée de scala
+* ...
+
+Remarques :
+
+* List.of()  ==> Prévu en Java 9 ?
+
+Try : return new Success<T> ou new Fail<Throwable>
+Qu'on peut encapsuler dans un Either<Throwable,T> pour faire comme en golang
+
+CompletableFuture ==> séparé en Promise -que j'appelle quand c'est fini- et en Future -pour traiter le résultat-
+javaslang.Future est iterable, avec des fonctions map, filter, ...

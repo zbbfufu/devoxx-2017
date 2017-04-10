@@ -1,0 +1,53 @@
+= Machine learning et séries temporelles
+
+@qambard
+
+* lapetitetranche.fr : vendeur de saucissons en ligne
+
+== Timeseries
+* valeur = f(temps)
+
+== Forecast / prédiction
+* Approche "statistique" (AR/ARMA/ARIMA/ARIMAX/SARIMAX/...)
+** Fonctionne bien quand les séries ne dépendanent pas d'une variable externe
+
+* Réseaux de neurones (LSTM)
+
+* Algos ML calssiques (Régression linéaire, random forest)
+** marche bien avec des variables externes
+
+== Avec Spark / Apache Zepelin
+* Zepelin: notebook pour executer des commandes Spark
+* Spark peut requêter uniquement les données locales d'un noeud cassandra
+
+* TempView : monte les données en mémoire qu'on peut requêter en SQL
+
+1. Travail sur les dates
+** Pas très natif dans spark, il faut découper la date en année, mois, jour du mois, jour de l'année, jour de la semaine...
+** On utilise un transformer
+** On met tout ça dans la TempView
+
+2. On prépare les données d'entrainement en prenant toutes les données avant une date T
+
+* Random forest : plusieurs petits arbres de décision
+
+* Biais: solution trop simple qui ne colle pas aux valeurs
+* Variance: solution trop complexe, qui colle aux valeurs mais fait n'importe quoi entre deux valeurs
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+fin

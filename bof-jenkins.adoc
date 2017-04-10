@@ -1,0 +1,32 @@
+= BOF Jenkins
+
+* Problématique :
+** Coté admin : Comment savoir quels plugins sont nécéssaires pour un JenkinsFile donné
+** Coté dev : Comment savoir qu'un Jenkinsfile fonctionnera sur un Jenkins donné
+
+* Il y a moyen de récupérer une grammaire du DSL du Jenkinsfile valide pour
+  une instance donnée d'un jenkins (selon ses plugins), et ainsi valider un Jenkinsfile
+
+* Avoir la description du build dans le code permet de rendre explicite la façon de
+  builder, tester, déployer...
+
+* Global Library : héritage de Jenkinsfile ?
+
+* 2 parties dans un Jenkinsfile:
+** comment builder le projet
+** infrastructure de build (nom des slaves, ...)
+
+* Gestion des credentials
+** Liés à l'instance
+** Plus facile depuis que les credentials peuvent être nommés
+
+* à venir, peut-être
+** dépendances maven entre pipeline ?
+*** un job maven se lance parce qu'un autre job a généré un artifact maven
+** système de pub/sub entre job ?
+** job A génère un artifact utilisé par un job B
+** est-ce le boulot de Jenkins ou le boulot de Maven|Gradle|Npm
+
+
+
+Fin

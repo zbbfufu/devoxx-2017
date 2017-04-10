@@ -1,0 +1,39 @@
+= Null pour les nuls...
+
+@cyril_delmas
+
+== Les problèmes
+* appels de méthode fonctionnent toujours... sauf si null
+** il faut tester null sur une chaine dappels (ex. builder)
+
+* sémantique du null ?
+** pas de valeur
+** valeur par défaut
+** erreur
+
+* sureté des programmes, le compilateur ne peut pas tout vérifier
+
+== Solution : ne pas utiliser null
+
+* Vérifier les paramètres : Object.requireNonNull
+* Return empty collection instead of null
+* Pattern nullObject
+** avec des lambdas identité
+
+* Optional
+* ofNullable() ==> of()
+
+* Null pour les erreurs :
+** javaslang Either
+** Either.right : cas valide ('right')
+** Either.left : cas d'erreur
+
+* Ne pas initialiser à null
+** variables locales
+** membres privés
+
+* Pour le code externe qui envoie du null
+** ajouter une facade ou un adapteur pour wrapper null dans Optional
+
+* Analyse statique
+** checker framework

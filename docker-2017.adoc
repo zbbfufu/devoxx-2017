@@ -1,0 +1,70 @@
+= Nouveautés Docker 2017
+
+Nouveau rythme de release :
+* Channel stable tous les 3 mois : 17.03, 17.06, 17.09...
+* Channel early tous les mois
+
+Docker editions:
+* Docker Engine
+* Docker for Mac
+* Docker for Windows
+* Docker for AWS
+* Docker for Azure
+* Docker for GCP
+
+* Community Edition (CE)
+* Entreprise Edition (EE)
+
+== Docker 4 Windows
+* Selon la version de windows, on peut utiliser des VM Linux ou du Windows Containers
+** Grosses images 4Go / 300Mo
+
+* Intégration avec DockerCloud : ouvre directement une cli sur le host choisi
+
+== Docker Cloud
+* Mode swarm: on peut enregistrer un cluster swarm sur Docker Cloud
+
+== Docker en général
+* Un seul binaire stable/experimental avec un flag --experimental
+
+* docker-init
+** systemd-like à embarquer pour lancer plusieurs process
+** par défault utilise le projet 'tini'
+** échangeable avec --init
+
+* Nouvelle organisation des commandes
+** docker ps ==> docker container ls
+** docker build ==> docker image build
+** docker create ==> docker container create
+
+* Rétrocompatibilité
+** la cli peut parler avec des versions plus anciennes
+
+* Plugins
+** listés sur le store
+** vieux/sshfs :)
+
+* Data management
+** docker system df : taille utilisé par docker
+** docker system prune : retire ce qui n'est plus utilisé
+** docker image/container/network/volume prune
+
+* Build
+** --network : se connecter à un réseau docker pour accéder à un service dans un container (genre un nexus)
+** --squash (experimental) : compacte tous les layers d'un build dans un seul layer
+*** oui mais l'history ne montre plus toutes les commandes ?
+
+* Multi stage build
+** Pour builder chaque stage dans une image différente
+** exemple
+*** build npm dans library/node
+*** build war dans library/maven
+*** final image dans tomee
+
+* compose v3 :
+** removed non portable options (build, volume-from, etc...)
+** Added Swarm specific options (replicas, mode, secrets, etc...)
+
+* Orchestration
+** fixer les versions d'images avec un sha256
+** Service logs (17.05)

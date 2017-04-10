@@ -1,0 +1,148 @@
+= Java EE 8 ? Ah ben non peut-être
+
+David Delabassee
+
+* Que sera Javaee8 ?
+
+== jax-rs
+=== 2.0
+* javaee 7
+* Client rest
+* réutilisable pour plusieurs requêtes
+* ne pas oublier le close
+** Q: AutoCloseable ?
+* ressemble beaucoup à l'api serveur
+* support async, return Future<T>
+** avec get synchrone ?!
+** ou avec callback success/failure
+
+Note: CountDownLatch pour savoir quand on a fini de traiter tous les éléments d'une collection
+
+=== 2.1
+* reactive client API
+** invoker .rx(executor)
+*** return CompletionStage
+
+* sse
+** Server-side:
+*** Not supported by IE, Edge, Opera mini
+*** SseEvent, OutboundSseEvent, InboundSseEvent
+*** Server to Client only
+*** SseEventSink, SseBroadcaster
+*** Produces(MediaType.SERVER_SENT_EVENTS)
+** client-side
+*** SseEventSource
+**** Q: AutoCloseable ?
+* hypermedia api enhancements
+* integration avec d'autres JSR
+
+* nio reporté
+
+== JSON
+=== JSON-P 1.1
+* JSON-Pointer
+** ex:
+```
+  new JsonPointer( "/0/name" )
+    .getValue( jsonObject )
+    .add()
+    .replace()
+    .remove()
+```
+* Json-patch
+** applique des opérations sur un json
+** atomique
+** ex:
+```
+  new JsonPach( JsonArray patch ).apply( JsonArray target )
+  JsonPatchBuilder().apply()
+```
+** JsonMergePatch.diff
+
+* nouveaux JsonCollectors
+
+=== JSON-B 1.1
+* JSON to Object and reverse
+* JAXB-like api
+```
+  JsonBuilder.create().toJson( object )
+```
+** nom des clés basé sur le nom des setters
+** @JsonbProperty pour paramétrer le nom des clés sur les attributs
+** Plusieurs stratégies de nommage, on peut en implémenter
+```
+  JsonBuilder.create( JsonbConfig config)...
+  JsonBuilder.newBuilder( "myProvider" ) // jackson, jersey, ...
+```
+
+
+== Servlet 4
+* HTTP/2
+** ServerPush
+```
+  httpRequest.newPushBuilder()
+    .addHeader("X-...", "value")
+    .path( resource ) //
+    .etag( ... )      //    Nécessaire pour les perfs
+    .lastModified( )  //
+    .push()
+```
+
+
+== JSF 2.3
+* CDI integration
+* Java Time API
+* WebSocket
+* Ajax Method invocation
+
+== CDI 2.0
+* CDI outside Java EE
+* CDI bootstrap API dans Java SE
+* Spec split :
+** CDI core
+** CDI for Java SE
+** CDI for Java EE
+=== Events
+```
+  @Inject Event<Payload> event;
+  event.fire(payload)
+  event.fireAsync(payload)
+
+  void method1(@Observes @Priority(10) Payload payload) { ... }
+  void method2(@Observes @Priority(20) Payload payload) { ... }
+
+  void async(@ObservesAsync Payload payload) { ... }
+```
+* Call method1 (10) before method2 (20)
+
+== Bean Valiation 2.0
+* Support Java 8
+** Java Time
+** Validation sur les types paramétrés `Map<@Valid UUID, @Valid Address>`
+
+== Security API for Java EE
+* JSR 375
+* sécurité auparavant gérée à différents niveaux
+* Nouvelle authentification
+** abstraction de JASPIC
+* IdentityStore (gestion utilisateurs)
+* Security Context
+** Merge des Role, Principal, ...
+** Abstraction au dessus des autres api de sécurité
+
+== Release
+* Juillet 2017
+* Glassfish 5 : reference implementation
+
+
+
+
+
+
+
+
+
+
+
+
+fin

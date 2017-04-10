@@ -1,0 +1,232 @@
+
+
+
+Projet HelloWorld
+
+1 main avec @SpringBootApplication
+1 interface HelloService
+1 implémentation HelloWorldConsole
+
+@SpringBootApplication =
+  @SpringBootConfiguration
+    * extends @Configuration
+  @ComponentScan
+    * default: scanne le package courant et ses sous-packages
+    * reco: mettre la classe de config dans le package principal du projet
+      et les autres composants dans des sous-packages
+  @EnableAutoConfiguration
+    *
+
+@Bean: bean factory method
+@Component: bean
+
+Initialisation de SpringBoot :
+  1. les beans utilisateurs détectés par @ComponentScan ou par @configuration manuelle
+  2. @EnableAutoConfiguration charge les composants du classpath
+
+Tester @AutoConfiguration:
+  Test.class
+    @Configuration
+    @ImportAutoConfiguration(MyAutoConfig.class)
+    staticInnerClassConfiguration
+      * importe l'autoconfig dans l'inner classe de configuration
+
+Classe d'auto-configuration:
+  @Configuration
+    @Bean...
+
+  * à enregistrer dans META-INF/spring.factories :
+
+  META-INF/spring.properties
+    com.spring....EnableAutoConfiguration=fr.furgerot.BlablaConfiguration
+
+/!\ AutoConfiguration surcharge les beans définis dans la configuration utilisateur
+Solution:
+@Bean
++ @ConditionalOnMissingBean
+  * ne charge le bean ciblé que s'il n'est pas déjà défini par la configuration utilisateur
+
+
+@ConfigurationProperties("hello")
+  * sur une classe qui va contenir les propriétés selon leur suffixe
+  * "hello" est le prefixe pour cette classe
+  * ex: "hello.suffix", "hello.prefix" vont être injectés dans cette classe
+    dans les attributs "suffix" et "prefix"
+
+@EnableConfigurationProperties(HelloProperties.class)
+
+* configuration dans /application.properties
+
+
+Dépendance "spring-boot-configuration-processor" :
+  * annotation processor qui génère un fichier "spring-completion-metadata.json" pour l'autocompletion
+    des clés de configuration dans les IDEs
+
+Note: Framework de configuration conditionnelle depuis Spring 4.x (évolution des Profiles)
+  @ConditionalOnClass   // utilise asm pour vérifier la présence de la classe dans le classpath
+  @ConditionalOnResource
+  @ConditionalOnJndi
+  @ConditionalOnExpression  // ugly
+  @ConditionalOnProperty
+  @ConditionalOnJava
+  @ConditionalOnSingleCandidate
+  @ConditionalOnBean
+  @ConditionalOnMissingBean
+  @ConditionalOnWebApplication
+  @ConditionalOnNotWebApplication
+On configuration class or on bean factory method
+
+@EnableAutoconfiguration
+  --> all spring.factories
+      --> all configuration
+          --> all condition (if one condition didn't match, configuration / bean is not loaded)
+
+
+Dans SpringBoot, toute la config est dans le jar principal (ex config mongo)
+mais ne charge que si les implémentations correspondantes sont dans le classpath
+
+
+On peut implémenter des conditions:
+* extends Condition
+* Builder pour créer des messages d'erreur standardisés et contextuels
+* @Conditional(ValidHelloPrefix.class) // sur la classe de configuration
+  ou créer une annotation:
+  @Conditional(ValidHelloPrefix.class) // sur l'interface de l'annotation (avec @Target et cie...)
+
+
+???? assertThat( ... ).isEmpty    => AssertJ :D
+
+Pour avoir des infos sur le démarrage du contexte spring :
+* java --debug
+
+Pièges à éviter quand on écrit sa propre auto-configuration:
+  1. @AutoConfigureAfter(OtherConfiguration.class) pour ordonnancer l'autoconfiguration
+  2. @ConditionalOnClass(T.class) @Bean public T method
+      * not possible, requires T to load
+      * il faut mettre @ConditionalOnClass(T.class) sur la classe d'AutoConfiguration
+        plutôt que sur la factory method, car Spring lit la classe d'Autoconfiguration
+        avec asm et ses conditions avant de la charger dans le classloader
+  3. @ConditionalOnMissingBean dans la configuration "Utilisateur" (vs AutoConfiguration part)
+      * Comme le chargement se fait en 2 temps (users, autoconf), il peut manquer des beans
+        au niveau users qui pourront exister au niveau autoconf
+      * Il n'y a pas de rapport d'erreur pour les conditions dans la partie utilisateurs,
+        il faut mieux créer une nouvelle autoconfig
+
+
+implements EnvironmentPostProcessor
+
+http://localhost:8080/env
+  * affiche toutes les sources de configuration possibles dans l'ordre de priorité
+http://localhost:8080/env/some.key
+  * affiche la valeur effective pour
+
+
+Ces mécanismes de configuration permettent de ne livrer qu'un seul war pour toutes les plateformes,
+respectant ainsi les 12-factors.
+
+
+== Sprint events
+
+Run the app
+  => ApplicationStartingEvent
+Logging initialization begins
+  => ApplicationEnvironmentPreparedEvent
+Config files are read
+Environment post-processors are called
+Logging initialization completes
+  => ApplicationPreparedEvent
+      Pas encore de contexte à ce moment
+Application context is refreshed
+  => ContextRefreshedEvent
+Embedded servlet container connectors are started (Spring boot only)
+  => EmbeddedServletContainerInitializedEvent
+      * Listening on http://localhost:8080
+      * On peut laisser l'appli choisir un port aléatoire dans les tests
+        et le récupérer dans cet évènement
+  => ApplicationReadyEvent
+
+
+* Listeners enregistrables dans le SpringApplicationBuilder avant le lancement de Spring
+
+== Failure Analyzer (Boot)
+Failure Analyzer custom:
+  * sur exception typée (custom)
+  * avec des données utiles dans l'exception
+  * nommer l'analyzer comme l'exception
+  * étendre AbstractFailureAnalyzer<MyCustomException>
+
+
+== Performances Spring Boot
+Ce n'est pas toujours le classpath scanning qui est lent... (100ms pour 5000 classes / 200 beans)
+Encore amélioré dans Spring 5
+
+Pour analyser ce temps de démarrage, ajouter "org.springframework:spring-context-indexer".
+1. Charge les données asm pour trouver les @Components et fils
+2. Génère un fichier META-INF/spring.components contenant <classe>=<which @Component annotations is used>
+3. On fait ça au build, et on inclus le fichier dans le jar, ce qui évite de refaire le scan asm
+
+* En Spring 5, les métadonnées ASM sont mises en caches pour les différents frameworks
+  qui ont besoin de scanner les annotations
+
+== Raison des lenteurs au démarrage
+* macOS Sierra, localhost DNS resolution is longer
+* antivirus, config network
+* entropy - urandom - problème dans les containers (SpringBoot#6229)
+* static code initialization ==> debug: retirer les composants chargés au fur et à mesure jusqu'à trouver le coupable
+* jvm "noverify" flag
+??? devtools ???
+
+== Autoconfiguration pour les tests
+L'idée est que si l'application est séparé en "slices" indépendants, les tests pourraient l'être également
+
+@MockBean
+  * crée un bean pour remplacer un bean existant
+  * reset à chaque test, plus de Mockito.reset
+
+@WebMvcTest(SomeController.class)
+  * disable autoconf
+  * configure SpringMvc => plus besoin de @WebContextConfiguration
+  * configure MockMvc => @Autowired suffit, plus de builder,
+  * scan seulement un sous-ensemble des composants
+  * option "secure = false" ou @Import(SecurityConfig.class) - Spring Security
+
+On peut aussi mettre une classe @SpringBootApplication à n'importe quel niveau de l'arborescence
+de packages des tests, qui sera utilisée à la place de notre SpringBootApplication principale.
+
+
+@DataJpaTest
+@AutoConfigureTestDatabase( replace = ...)
+  * on peut mettre de la config dans $HOME/.prefix/suffix ?
+
+MockWebserviceServer
+
+@RestClientTest
+  * configure MockRestServiceServer
+  * disable classpath scanning
+
+  MockRestServiceServer
+    => avec un RestTemplate
+      => peut être généré avec le RestTemplaceBuilder
+        => fonctionne pour plein de libs client rest
+    => on peut fournir par URL le contenu à renvoyer sous forme de fichier
+
+@SpringBootTest pour les tests d'intégration : démarre le serveur complet
+  * avec @AutoconfigureMockMvc : ne démarre pas le serveur mais teste de bout en bout
+
+@SprintBootTest(webEnvironment = ...WebEnvironment.RANDOM_PORT)
++ @Autowired RestTemplate => requête sur le port aléatoire
+
++ @Autowired WebClient
+
+
+Selenium: htmlunit
+
+
+
+github/snicoll-demos/hello-service-auto-configuration
+github/snicoll-demos/cfp-exemple (devox-test branch)
+
+
+Tout ça est uniquement Spring-boot, pas Spring seul.
+
+https://www.mkyong.com/spring-boot/spring-boot-deploy-war-file-to-tomcat/

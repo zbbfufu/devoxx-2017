@@ -1,0 +1,71 @@
+= Spring 5 Themes and Trends
+
+@snicoll
+
+== Rappel 4.x
+* since 2013
+* 4.3 en Juin 2016
+* releases tous les 9 mois
+* Fonctionnalités Java 8 détectées par le framework
+** API Date
+** Optional
+* Support étendu jusqu'en 2019
+
+== Spring Framework 5 agenda
+* RC1 fin avril
+* changement de pré-requis:
+** JDK 8+
+** Javaee 7
+** Junit 5 (tests Junit 4 supporté par le 5)
+
+* 5.0 en Juin 2017
+* 5.1 fin 2017
+
+== Performance improvements
+* Temps de démarrage
+** Index de scan d'annotations Spring, mais aussi JPA, ...
+
+* SpringMVC: N-Path matcher réécrit
+** trouver le controller selon le path d'URL
+** désactivé par défaut
+
+== Nouveautés
+
+* Support java 9 ==> quand il sera sorti
+
+* HTTP/2
+** Nouveau webclient
+** Servlet 4
+
+== Reactive Spring
+* Basé sur Reactor 3
+* Pas nécéssaire pour les applications classiques. Option pour des applis particulières
+
+
+* Programmation réactive
+** Appli d'aujourd'hui basé sur Servlet, 1 request = 1 thread, limitation de la machine
+** Imperatif vs event-based
+** DB w/ JTA : non-réactif (pas de driver jdbc réactifs)
+
+** 4 interfaces: Publisher / Subscriber / Subscription / Processor (=Publisher&Subscriber)
+
+* @GetMapping = @GET @RequestMapping
+** Standard ?
+
+
+* Remplace Servlet API par HTTP/Reactive Spring (sur Servlet3.1, Netty ou Undertow)
+** sur lequel s'appuie Spring WebFlux
+** sur lequelle s'appuie encore un bloc que j'ai pas noté
+
+== Functionnal API (work in progress)
+* Configuration programmatique, enregistrement des beans dans le contexte
+* Functionnal for WebFlux, sans annotations
+** Remplacer les @RequestMapping par une suite de RouterFunction
+
+== Support de Kotlin
+* Permet de simplifier le code en inférant les types de retour
+* Support des paramètres optionnels Kotlin
+* DSL Kotlin
+
+
+Note ECA: modifier tous les tests de controllers pour réduire le contexte au minimum

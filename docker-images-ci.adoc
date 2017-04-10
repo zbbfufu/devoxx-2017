@@ -1,0 +1,68 @@
+= Intégration continue d'images Docker
+
+(Octo)
+
+@ArnaudMAZIN
+Benoît Gastinne
+
+
+== CI d'images Docker
+
+* Manque de compétence
+* Manque de confiance dans les commandes (que va faire l'image que je lance ?)
+
+== Caractéristiques de la solution
+* On-Premise
+* Reconstruction des images
+* Promotion des images
+*
+
+== Stack
+* Gitlab
+* Kubernetes
+* Clair > CoreOS vulnerability check
+** ne fonctionne qu'avec les paquets des distributions officielles (deb, rpm, alpine ...)
+** ne fonctionne pas avec un soft installé en "make install"
+* Docker Notary (signature d'images, free)
+* Portus (IDP & GUI for Docker registry)
+
+== Pipeline
+* DEV/feature branch
+** commit
+** TU / build image
+** Scanimage + test live (sans déploiement)
+** deploy (sur cluster)
+** tests live sur cluster
+* MASTER
+** Merge PR
+*** La branche de feature est supprimée après merge, ce qui éteint/supprime l'environnement de test de la feature
+** TU / build image
+** Scanimage + test live (sans déploiement)
+** deploy (sur cluster)
+** tests live sur cluster
+** Demande de promotion
+* RELEASE
+...
+
+
+
+* `export DOCKER_CONTENT_TRUST=1`
+** Docker refuse de pull/push une image qui n'est pas signée dans Notary
+
+
+Note: "pyramide des tests" ?
+
+Note: tester gitlab
+
+
+== Conclusion
+* Maximiser les revues de code des Pull Requests
+
+* 3 étages de tests automatiques:
+** unitaires
+** container isolé
+** topologie de déploiement
+
+* environnements dynamiques mis à disposition
+
+* analyse des vulnérabilités

@@ -1,0 +1,103 @@
+= Log me tender
+
+@OlivierCroisier
+
+== Historique
+* System.out
+** Log4j
+** Factory statique Logger.getLogger()
+** logger.log...
+
+* java.util.logging
+** standardisation de log4j
+
+* Log4j2
+** amélioration de perf
+** même API
+
+* Commons-logging
+** car trop de framework de logs utilisés par des dépendances (jar hell)
+** 'multiprise'
+** toujours l'API de log4j
+
+* Slf4j
+** One framework to rule them all
+** Standard de fait en 2017
+
+== Problèmes
+1. Concaténation dynamique du message de log avec d'autres trucs
+2. évaluation immédiate
+** Solution 1: isDebugEnabled
+** Solution 2: lazy eval (supplier ou lambda)
+*** Pas implémenté dans Slf4J
+
+== Slf4J avec des lambdas ?
+1. Ne pas utiliser Slf4J
+2. Faire évoluer Slf4J => impossible, ils veulent la rétro-compatibilité
+3. Facade devant slf4j...
+
+* Injection des loggers
+** Logger final static :(
+
+* Besoin d'un logger
+** injectable
+** testable
+** mockable
+** aop-able (perf, coupe-circuit)
+
+== Problème 4: fw trop bas niveau
+
+* Non-DRY
+** besoin: même niveau de log, même format des messages
+** on ne peut pas garantir qu'on logge 2 fois la même info de la même façon
+** ex: 1 dev fait log.info, l'autre fait log.debug
+
+* Couplage fort
+* log essentiellement orienté fichier
+
+
+== Solution: framework de log de haut niveau
+* facade du framework technique
+* API techniques et métiers adaptées
+* centraliser la gestion des messages (format, niveau)
+* orienté events
+** 1 event -> n opérations de log
+
+Note: CQRS pour les logs ?
+
+
+== Proposition: 'LogService'
+* Design goals
+** API restreinte et moderne (que de suppliers en paramètre)
+** rétro-compatibilité et extensibilité (on garde les log.info, log.method)
+** façade à Slf4J
+** Composant injectable @Service Spring
+
+interface LogService {
+  void log(  level, supplier, exception)
+
+  //retro
+  default void info()
+  default void debug()
+
+  //custom
+  default void logRestApi()
+  default void logDbAccess()
+}
+
+Implémentation fournie par une Factory
+
+
+Idée:
+  quand on loggue une exception, la mettre dans un fichier à part
+  et logguer le nom du fichier
+
+
+ExceptionContext: http://bit.ly/2nQQqB5
+
+
+
+
+
+
+Fin

@@ -1,0 +1,22 @@
+= Docker & DevOps : same practices on both Linux & Windows!
+
+@adrienblind @jcorioland
+
+* Container
+** Immutable
+** Fullstack: inclus l'appli, le middleware, la config sys, ...
+** > Auto-suffisant
+** artefact buildé, versionné
+
+* Apps team: Besoin de Devs & d'Ops pour créer un container
+* Infra team: comment on gère de multiples containers
+
+
+* docker service create --constraint "node.tag == windows"
+
+* Powershell:  `Invoke-WebRequest http://ip/ -UseBasicParsing`
+
+* compose v3
+** nouvelle section service > deploy
+
+* Kubernetes hybride fonctionne

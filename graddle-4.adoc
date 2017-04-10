@@ -1,0 +1,99 @@
+= Gradle 4
+@CedricCham from Gradle Inc.
+
+github/melix/devoxxfr-fast-build
+
+Features présentées sont aussi dans la 3.5
+
+* Gradle = FOSS + Enterprise (for build analytics)
+
+* Java/android/natif c,c++/go/scala...
+* tourne sur la jvm
+
+
+== Gradle daemon
+* Le daemon en tâche de fond bénéficie des optimisations du JIT pour accélérer le build
+* Avec un daemon chaud, 16 secondes -> 5 secondes
+
+== Continuous builds
+* Mode continu '-t'.
+** ré-exécute la même tâche en boucle
+** Gradle surveille les modifications sur les inputs des tâches
+** + flag parallel build
+
+== Profiling
+* Gradle Enterprise
+** build scans
+*** Free !!
+*** monitor, profile, optimize build process
+*** timeline des tâches
+*** historique de tous les builds, avec stacktrace, tâches en parallèles, ...
+
+* 2 phases : configuration, execution
+** configuration may be slow if badly implemented
+
+* attention à la mémoire allouée aux builds
+
+== Incremental builds
+* Gradle permet de déclarer les tâches incrémentales
+** déclarer les inputs et outputs de chaque tâche
+** évite de rebuilder ce qui est inutile
+
+* exemple: shaded jar
+** input= classpath, mapping
+** output= shadedjar
+** => rebuild only if input changes
+** Déclarer les @InputFiles, @Input, @OutputFiles dans le code des tâches custom
+
+
+== Incremental compilation
+* only compile changed files and their dependencies
+* problem: language specific
+* Gradle 3.4
+
+```
+compileJava {
+  options.incremental = true
+}
+```
+
+* Compile avoidance
+** Compile classpath vs Runtime classpath
+** En C, interface binaire et implémentation séparées (.h / .c)
+** Le compilateur n'a pas besoin des '.c'
+** Gradle ignore les changements dans le coeur des méthodes
+
+** Maven ne fait pas la différence entre les dépendances nécessaires
+   pour compiler les projets qui utilisent mon API et les dépendances
+   que mon API utilise en interne
+*** Exemple : fr.furgerot.model est exporté, guava est interne à mon projet
+
+** La séparation compile / runtime permet de ne pas avoir à recompiler
+   tous les modules downstream si l'interface du module ne change pas
+
+
+== Composite builds
+* Problème du projet dans un repo de source unique : il faut tout recompiler
+* Problème du projet avec des modules dans différents dépôts : il
+  faut recompiler le module modifié et le publier dans le dépôt (local au min),
+  et éventuellement utiliser des dépendances SNAPSHOT avant de releaser
+
+* Solution Gradle:
+** inclusion sélective des modules qu'on modifie : `--include-build=../../other-module`
+** déclare certaines dépendances transitive binaires comme dépendance source
+
+== Build cache
+* Gradle 3.5
+** Cache machine-local (checkout de plusieurs projets)
+** Cache centralisé
+** `--build-cache` ou `org.Gradle.cache` dans Gradle.properties
+
+* On peut se servir du Jenkins pour générer un cache de build
+  utilisable par tous les développeurs
+
+== Nouveautés Gradle 4
+* Parallèlisation par défaut pour certaines tâches:
+** résolution de dépendances
+** parallélisation de plusieurs tâches
+** parallélisme intra-tâche
+** Attention, pas très safe à cause des états partagés !

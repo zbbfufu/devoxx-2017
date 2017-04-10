@@ -1,0 +1,60 @@
+= Docker image lifecycle
+
+JFrog : Artifactory, bintray, mission control, xray
+
+* Beaucoup d'engouement pour Docker, mais pas assez de confiance pour partir en production
+
+* Goal : Develop a lifecycle for Docker containers
+
+* Un container c'est comme un war java, ça contient tout ce qu'il faut pour
+  faire fonctionner l'application
+
+== Environnements standards
+* Postes Dev
+* Jenkins (central dev)
+* Test
+* iso-prod
+* production
+
+* Dockerfile
+** Attention à fixer les versions, ne pas utiliser le latest
+** FROM ubuntu:14.04 insuffisant => FROM ubuntu:<image_tag>
+** pas de apt-get
+
+== Server Patterns
+http://martinfowler.com/bliki/ImmutableServer.html
+
+* Traditional: patch until it's unpatchable
+* Immutable: start from scratch each time
+
+== Pipeline
+* Build image once, run everywhere
+
+* Portails qualité
+** QA team shouldn't test dev images
+** Do not stage (preprod) untested images
+
+* Problème docker registry: on ne peut pas avoir plusieurs registries sur un même host
+** limitation repo_host/name/image:tag
+** solution: changer de port, 1 port par repo
+
+* autre problème, je dois push & tag sur chaque repo
+** solution artifactory: promote image between repo
+** repo virtuel qui aggrege toutes les images
+
+* Pipeline requirements
+** app must be tested "in-container"
+** le middleware doit être update souvent
+
+= Pipelines:
+1. jar file build with unit tests
+2. base image tests (security)
+3. jar in-container tests
+
+Note: important de tests la sécurité des images de base
+
+== Conclusion
+
+L'idée est d'avoir deux pipelines parallèles, l'un pour le build de l'appli, l'autre pour la validation de l'image de base.
+Puis joindre les artefacts résultants de ces deux pipelines, tester l'image finale.
+L'image générée est stockée dans un dépôt dev, puis uat, puis pprod pour arriver intouchée (même hash) dans le dépôt de production.
