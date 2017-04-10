@@ -1,23 +1,24 @@
 = Mes notes de Devoxx France 2017
+ifdef::env-github,env-browser[:outfilesuffix: .adoc]
 
+* link:resume{outfilesuffix}[Mon résumé de Devoxx 2017]
 
-* bof-jenkins
-* docker-2017
-* docker-devops-win-lin
-* docker-image-lifecycle
-* docker-images-ci
-* graddle-4
-* intro-to-rkt
-* java-pattern-matching-forax
-* java9-gc-g1
-* java9-jmdoudoux
-* javaee8-delabassee
-* javaslang
-* log-me-tender
-* machine-learning-timeseries
-* null4nulls
-* resume
-* spring-5
-* spring-boot-university
-* voiture-autonome-d-girard
-* webtools2017
+* link:bof-jenkins{outfilesuffix}[BOF Jenkins]
+* link:docker-2017{outfilesuffix}[Docker 2017]
+* link:docker-devops-win-lin{outfilesuffix}[Docker devops sur Windows et Linux]
+* link:docker-image-lifecycle{outfilesuffix}[Cycle de vie des images Docker]
+* link:docker-images-ci{outfilesuffix}[Docker image CI]
+* link:graddle-4{outfilesuffix}[Gradle 4]
+* link:intro-to-rkt{outfilesuffix}[Introduction à RKT]
+* link:java-pattern-matching-forax{outfilesuffix}[Java 10: Pattern Matching]
+* link:java9-gc-g1{outfilesuffix}[Améliorations du G1 dans Java 9]
+* link:java9-jmdoudoux{outfilesuffix}[Nouveautés Java 9 par J.M. Doudoux]
+* link:javaee8-delabassee{outfilesuffix}[Les nouveautés à venir dans Java EE 8]
+* link:javaslang{outfilesuffix}[Framework Javaslang]
+* link:log-me-tender{outfilesuffix}[Log me tender: réflexion sur les loggers]
+* link:machine-learning-timeseries{outfilesuffix}[Prévisions sur les séries temporelles (Machine Learning)]
+* link:null4nulls{outfilesuffix}[Null pour les nuls]
+* link:spring-5{outfilesuffix}[Spring 5]
+* link:spring-boot-university{outfilesuffix}[Spring boot (université)]
+* link:voiture-autonome-d-girard{outfilesuffix}[Programmation probabilistique: la voiture autonome (D. Girard)]
+* link:webtools2017{outfilesuffix}[Outils de développements de Chrome]
