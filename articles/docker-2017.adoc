@@ -15,7 +15,7 @@ Docker editions:
 * Community Edition (CE)
 * Entreprise Edition (EE)
 
-== Docker 4 Windows
+== Docker for Windows
 * Selon la version de windows, on peut utiliser des VM Linux ou du Windows Containers
 ** Grosses images 4Go / 300Mo
 

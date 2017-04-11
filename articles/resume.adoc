@@ -3,6 +3,67 @@
 
 
 == Ce que j'ai aimé
+=== Les nouveautés Docker 2017
+Depuis quatre ans, Docker est en perpétuel changement. 2017 n'a pas dérogé à la règle.
+
+==== Coté communication...
+les produits de Docker Inc. s'alignent. On retrouve maintenant
+Docker for Mac, Windows, AWS, Azure et GCP, en plus du classique Docker Engine pour Linux.
+Ces produits sont en fait des assistants pour mettre en place facilement le Docker Engine
+sur les différentes plateformes.
+De plus, les dénominations commerciales ont évolué. Le Docker gratuit devient
+Docker Community Edition (CE) tandis que Docker DataCenter (DDC) devient
+Docker Enterprise Edition (EE). Voilà qui va parler au javaïstes ;)
+Enfin les releases auriont lieu à intervalle régulier :
+* tous les 3 mois sur le channel _stable_: 17.03, 17.06, 17.09...
+* tous les mois sur le channel _early_
+
+==== Coté technique...
+vos Ops auront la possibilité d'activer des plugins pour gérer
+différement les réseaux, le stockage, les logs, ... Ces plugins sont disponibles
+dans le docker storesous forme de containers. Ils peuvent ainsi être développés
+dans n'importe quel langage (le Go restant fortement appréçié !).
+
+Petit changement: certaines commandes historiques ont été regroupées par systèmes
+logiques. Ainsi `docker ps` peut s'écrire `docker container ls`, `docker build`
+devient `docker image build` et `docker container create` est un alias de
+`docker create`. Rassurez-vous la rétrocompatibilité est assurée, les anciennes
+commandes ne disparaîtront pas de sitôt.
+
+De nouvelles commandes apparaissent pour répondre aux critiques sur la consommation
+d'espace disque :
+* `docker system df` permet de voir l'espace consommé et libérable
+* `docker system prune` nettoiera ce qui ne sert plus
+* `docker image/container/network/volume prune` sera utilisé pour les _frappes chirurgicales_
+
+==== A venir
+un nouveau mécanisme de _staged build_. Vous pourrez déclarer dans votre Dockerfile
+plusieurs étapes de build, chacune d'entre elle s'exécutant dans un container
+différent avant de composer l'image finale. Une façon de builder un front Angular,
+et un back JavaEE et d'embarquer les deux dans une troisième image light.
+
+Du nouveau aussi avec le partenariat Docker-Microsoft. Ces derniers ont continué
+leur travail sur les Windows Containers. Vous pourrez très bientôt monter des
+clusters Swarm hybrides Docker-Linux / Windows Containers pour interroger votre
+api java depuis une appli IIS.
+
+Pour terminer, les fichiers docker-compose.yml ont évolué avec une version 3 plus
+adaptée au déploiement de `stack`s Swarm.
+
+Allez aussi faire un tour sur http://cloud.docker.com, vous y trouverez quelques
+outils pour gérer vos petits Swarms perso !
+
+=== Le BOF Jenkins
+C'est toujours intéressant de discuter avec les créateurs de vos outils préférés.
+Avec Jenkins ça l'est encore plus puisqu'ici Devs et Ops sont de la partie.
+
+Cloudbees est toujours aussi actif dans le développement de la version libre de
+Jenkins, et les gros changements de ces 2 dernières années commencent à se voir
+dans la vrai vie.
+Les Devs ont tous adorés pouvoir décrire leur build dans le Jenkinsfile
+de leur projet et les Ops s'épargnent la configuration manuelle des jobs... enfin
+presque, puisque certaines fonctionnalités du plugin Maven leur manque.
+Grâce à ce BOF la discussion avant et on espère qu'une solution élégante sera trouvée.
 
 
 == Ce que j'ai moins aimé
@@ -22,7 +83,15 @@ Entre autres :
 
 C'est très _sexy_ présenté ainsi, mais je pense que c'est dangereux à moyen terme :
 on touche ici au code _core_ de nos applications, et il sera très coûteux de réécrire
-le code avec les API standard s'il nécéssaire de se débarasser de *Javaslang*
+le code avec les API standard s'il nécéssaire de se débarasser de *Javaslang*.
+
+=== La présentation du G1 amélioré dans Java 9
+Une problématique majeure de Java depuis sa création, c'est la performance du
+garbage collector. Le dernier en date est le G1, plus efficace que ses prédécesseur,
+mais pas encore assez lorsqu'on parle de TB de memoire vive.
+
+Et apparement ça a dérangé la société ActiveViam qui a passé 1h à nous expliquer
+--qu'ils sont les meilleurs--
 
 == Ce que je vais faire à mon retour au bureau
 === Spring 5
@@ -40,7 +109,7 @@ Spring 5 devrait sortir en juin de cette année et apporte son lot d'améliorati
 
 En particulier nos tests ont besoin d'un bon coup de balai !
 
-=== Les nouveautés Docker 2017
+
 
 
 == Ce que j'ai découvert
